@@ -1,4 +1,4 @@
-var glsl = require('mapbox-glsl-optimizer')
+var glsl = require('marcs-glsl-optimizer')
 
 module.exports = {
     frag: optimize(glsl.FRAGMENT_SHADER, 'fragment')
