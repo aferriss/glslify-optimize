@@ -25,8 +25,6 @@ function transform(filename) {
   function flush() {
     var src = buffer.join('')
     if (src.indexOf('GLSLIFY') === -1) {
-
-    console.log(src);
       this.push(src)
       this.push(null)
       return
@@ -36,7 +34,7 @@ function transform(filename) {
     var walk = astw(ast)
 
     debug('Original source:')
-    //    debug('\n' + src)
+    debug('\n' + src)
 
     walk(function(node) {
       if (node.type !== 'Literal') return
@@ -56,6 +54,6 @@ function transform(filename) {
 
     this.push(src = escodegen.generate(ast))
     this.push(null)
-    //    debug(src)
+    debug(src)
   }
 }
