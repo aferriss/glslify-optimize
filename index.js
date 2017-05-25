@@ -24,7 +24,9 @@ function transform(filename) {
 
   function flush() {
     var src = buffer.join('')
-    if (src.indexOf('glslify') === -1) {
+    if (src.indexOf('GLSLIFY') === -1) {
+
+    console.log(src);
       this.push(src)
       this.push(null)
       return
@@ -34,47 +36,26 @@ function transform(filename) {
     var walk = astw(ast)
 
     debug('Original source:')
-    debug('\n' + src)
+    //    debug('\n' + src)
 
     walk(function(node) {
       if (node.type !== 'Literal') return
-      if (node.value !== 'glslify/adapter.js') return
-      var parent = node
-      var callee = node
-      if (!(parent = parent.parent)) return
-      if (!(parent = parent.parent)) return
-      if (!(callee = parent.callee)) return
-      if (!(callee = callee.callee)) return
-      if (callee.name !== 'require') return
-      var args = parent.arguments
-      if (args.length < 2) return
-      if (args[0].type !== 'Literal') return
-      if (args[1].type !== 'Literal') return
-
-      var vert = args[0].value
-      var frag = args[1].value
-
-      debug('Original fragment shader:')
-      debug('\n' + frag)
-
-      debug('Original vertex shader:')
-      debug('\n' + vert)
-
-      frag = optimize.frag(frag)
-      vert = optimize.vert(vert)
-
-      debug('Optimized vertex shader:')
-      debug('\n' + vert)
-
-      debug('Optimized fragment shader:')
-      debug('\n' + frag)
-
-      args[0].value = vert
-      args[1].value = frag
+      if (node.value.length <1 ) return
+      if (typeof node.value !== 'string') return
+      var opti;
+      if(node.value.indexOf('gl_FragColor') !== -1){
+        console.log(node.value);
+         opti = optimize.frag(node.value); 
+         node.value = opti;
+      }
+      if(node.value.indexOf('gl_Position') !== -1){
+         opti = optimize.vert(node.value);
+         node.value = opti;
+      }
     })
 
     this.push(src = escodegen.generate(ast))
     this.push(null)
-    debug(src)
+    //    debug(src)
   }
 }
