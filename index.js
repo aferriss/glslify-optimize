@@ -42,7 +42,6 @@ function transform(filename) {
       if (typeof node.value !== 'string') return
       var opti;
       if(node.value.indexOf('gl_FragColor') !== -1){
-        console.log(node.value);
          opti = optimize.frag(node.value); 
          node.value = opti;
       }
